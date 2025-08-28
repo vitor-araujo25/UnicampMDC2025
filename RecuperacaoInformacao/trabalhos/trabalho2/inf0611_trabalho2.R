@@ -17,11 +17,11 @@
 # setwd("") 
 options(warn=-1)
 # install.packages("imager")
-source(".\\ranking_metrics.R")
-source(".\\trabalho2_base.R")
+source("./ranking_metrics.R")
+source("./trabalho2_base.R")
 
 # caminho da pasta de imagens
-path_plantas = ".\\plantas"
+path_plantas = "./plantas"
 
 #----------------------------------------------------------------#
 # Leitura das imagens 
@@ -62,8 +62,7 @@ hist_cor_desc <- function(path_img){
 
 # obtem caracteristicas de textura   
 lbp_desc <- function(img){
-  # img <- img[[1]]
-  lbp(img[,,1,1],1)
+  lbp(grayscale(img)[,,1,1],1)
 }
 
 
@@ -109,7 +108,7 @@ Momentos <- function(img){
 features_c <- t(sapply(names(imagens), hist_cor_desc))
 rownames(features_c) <- names(imagens)
 
-features_t <- t(sapply(imagens, lbp_desc))
+features_t <- t(sapply(imagens, lbp_desc.$lbp.u2))
 rownames(features_t) <- names(imagens)
 
 features_s <- t(sapply(imagens, Momentos))
@@ -121,11 +120,11 @@ rownames(features_s) <- names(imagens)
 
 # definindo as consultas
 # obs.:  use o caminho completo para a imagem
-consulta_biloba <- ".\\plantas\\biloba_02.jpg"     
-consulta_europaea <- ".\\plantas\\europaea_01.jpg" 
-consulta_ilex <- ".\\plantas\\ilex_08.jpg"
-consulta_monogyna <- ".\\plantas\\monogyna_04.jpg"
-consulta_regia <- ".\\plantas\\regia_07.jpg"
+consulta_biloba <- "./plantas/biloba_02.jpg"     
+consulta_europaea <- "./plantas/europaea_01.jpg" 
+consulta_ilex <- "./plantas/ilex_08.jpg"
+consulta_monogyna <- "./plantas/monogyna_04.jpg"
+consulta_regia <- "./plantas/regia_07.jpg"
 
 # visualizando as consultas
 par(mfrow = c(3,3), mar = rep(2, 4))
@@ -137,18 +136,13 @@ mostrarImagemColorida(consulta_regia,"regia_07.jpg")
 
 # plotando as imagens retornadas
 par(mfrow = c(3,3), mar = rep(2, 4))
-plot_ranking <- function(consulta, feature){
-  distancias <- lapply(names(imagens), 
-                       function(x) dist(feature[c(consulta, x),], 
-                                        method = "euclidean"))
-  distancias <- unlist(distancias)
-  names(distancias) <- name_plantas
-  ranking <- names(sort(distancias))
+plot_ranking <- function(query, features){
+  distancia <- dist(features, method = "euclidean")
+  distancia <- as.matrix(distancia)
+  distancia_interesse <- distancia[,query]
   
-#  for(img in ranking[1:5]){
-#    plot(load.image(paste(".\\plantas\\", img, sep= "")), axes = FALSE, main = img)
-#  }
-  return(ranking[1:5])
+  ranking <- order(distancia_interesse)
+  return(ranking)
 }
 #-----------------------------#
 # construindo rankings                          
