@@ -175,17 +175,42 @@ ranking_s_regia <- plot_ranking(consulta_regia, features_s)
 # top 5, 10, 15 e 20
   
 analyse_rankings <- function(ranking, ground_truth) {
-  <to-do>
+  column_names <- c("top","Precisao", "Recall", "F1","AP")
+  
+  df <- data.frame(matrix(nrow = 0, ncol = length(column_names)))
+  colnames(df) <- column_names
+  
+  for (x in c(5,10,15,20)) {
+   df <- rbind(df, data.frame(top = paste("top_",as.character(x), sep=""),
+                              Precisao = precision(ground_truth, ranking, x),
+                              Recall = recall(ground_truth, ranking, x),
+                              F1 = f1_score(ground_truth, ranking, x),
+                              AP = ap(ground_truth, ranking, x)))
+  }
+  return(df)
 }
 
+
 # analisando rankings gerados com caracteristicas de cor
-analyse_rankings(<to-do>)
+c_biloba_analyse <- analyse_rankings(ranking_c_biloba, ground_truth_biloba)
+c_europaea_analyse <- analyse_rankings(ranking_c_europaea, ground_truth_europaea)
+c_ilex_analyse <- analyse_rankings(ranking_c_ilex, ground_truth_ilex)
+c_monogyna_analyse <- analyse_rankings(ranking_c_monogyna, ground_truth_monogyna)
+c_regia_analyse <- analyse_rankings(ranking_c_regia, ground_truth_regia)
 
 # analisando rankings gerados com caracteristicas de textura
-analyse_rankings(<to-do>)
+t_biloba_analyse <- analyse_rankings(ranking_t_biloba, ground_truth_biloba)
+t_europaea_analyse <- analyse_rankings(ranking_t_europaea, ground_truth_europaea)
+t_ilex_analyse <- analyse_rankings(ranking_t_ilex, ground_truth_ilex)
+t_monogyna_analyse <- analyse_rankings(ranking_t_monogyna, ground_truth_monogyna)
+t_regia_analyse <- analyse_rankings(ranking_t_regia, ground_truth_regia)
 
 # analisando rankings gerados com caracteristicas de forma
-analyse_rankings(<to-do>)
+s_biloba_analyse <- analyse_rankings(ranking_s_biloba, ground_truth_biloba)
+s_europaea_analyse <- analyse_rankings(ranking_s_europaea, ground_truth_europaea)
+s_ilex_analyse <- analyse_rankings(ranking_s_ilex, ground_truth_ilex)
+s_monogyna_analyse <- analyse_rankings(ranking_s_monogyna, ground_truth_monogyna)
+s_regia_analyse <- analyse_rankings(ranking_s_regia, ground_truth_regia)
 
 #----------------------------------------------------------------#
 # Questao 2 - RESPONDA:                   
