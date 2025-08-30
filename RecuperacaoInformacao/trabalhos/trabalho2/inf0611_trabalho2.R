@@ -108,7 +108,7 @@ Momentos <- function(img){
 features_c <- t(sapply(names(imagens), hist_cor_desc))
 rownames(features_c) <- names(imagens)
 
-features_t <- t(sapply(imagens, lbp_desc.$lbp.u2))
+features_t <- t(sapply(imagens, lbp_desc))
 rownames(features_t) <- names(imagens)
 
 features_s <- t(sapply(imagens, Momentos))
@@ -169,7 +169,7 @@ ranking_s_regia <- plot_ranking(consulta_regia, features_s)
 
 #-----------------------------#
 # comparando  rankings                              
-
+s
 ## utilize as funções do arquivo ranking_metrics.R para calcular 
 # a precisão, revocação, taxa F1 e precisão média nos 
 # top 5, 10, 15 e 20
@@ -248,17 +248,21 @@ s_regia_analyse <- analyse_rankings(ranking_s_regia, ground_truth_regia)
 
 ## obter vetores finais de caracteristicas pela concatenação de 
 # cada tipo de caracteristica (cor, textura e forma):
-features_concat <- <to-do>
+features_concat <- cbind(features_c, features_t, features_s)
   
 # gerar novos rankings
-ranking_concat_biloba <- <to-do>
-ranking_concat_europaea <- <to-do>
-ranking_concat_ilex <- <to-do>
-ranking_concat_monogyna <- <to-do>
-ranking_concat_regia <- <to-do>
+ranking_concat_biloba   <- plot_ranking(consulta_biloba, features_concat)
+ranking_concat_europaea <- plot_ranking(consulta_europaea, features_concat)
+ranking_concat_ilex     <- plot_ranking(consulta_ilex, features_concat)
+ranking_concat_monogyna <- plot_ranking(consulta_monogyna, features_concat)
+ranking_concat_regia    <- plot_ranking(consulta_regia, features_concat)
   
 # analisando rankings gerados com caracteristicas concatenadas
-analyse_rankings(<to-do>)
+concat_biloba_analyse   <- analyse_rankings(ranking_concat_biloba, ground_truth_biloba)
+concat_europaea_analyse <- analyse_rankings(ranking_concat_europaea, ground_truth_europaea)
+concat_ilex_analyse     <- analyse_rankings(ranking_concat_ilex, ground_truth_ilex)
+concat_monogyna_analyse <- analyse_rankings(ranking_concat_monogyna, ground_truth_monogyna)
+concat_regia_analyse    <- analyse_rankings(ranking_concat_regia, ground_truth_regia)
 
 
 #----------------------------------------------------------------#
@@ -284,34 +288,39 @@ analyse_rankings(<to-do>)
 # Questao 4
 #----------------------------------------------------------------#
 
+# Definindo a consulta (mesmo índice da Questão 2)
+consulta <- 4
+
 # calculando as distancias, descritor:  histograma de cor 
-dist_hist_<to-select> <- get_distance_vector(<to-do>, <to-do>) 
-dist_hist_<to-select> <- <to-do>
+dist_hist_q4 <- get_distance_vector(histogramas, consulta) 
+r_hist_q4 <- order(dist_hist_q4)
   
 # calculando as distancias, descritor:  textura 
-dist_text_<to-select> <- get_distance_vector(<to-do>, <to-do>) 
-dist_text_<to-select> <- <to-do> 
+dist_text_q4 <- get_distance_vector(texturas, consulta) 
+r_text_q4 <- order(dist_text_q4)
   
 # calculando as distancias, descritor:  forma 
-dist_forma_<to-select> <- get_distance_vector(<to-do>, <to-do>) 
-dist_forma_<to-select> <- <to-do> 
+dist_forma_q4 <- get_distance_vector(moments, consulta) 
+r_forma_q4 <- order(dist_forma_q4)
   
-# calculando e analisando  rankings combmin
-r_combmin_<to-select> <- names(imagens)[combmin(<to-do>, <to-do>, <to-do>)]
-r_combmin_<to-select> <- <to-do>
+# calculando e analisando rankings combmax
+r_combmax_q4 <- names(imagens)[combmax(dist_hist_q4, dist_text_q4, dist_forma_q4)]
+r_combmax_q4
 
-# calculando e analisando  rankings combmax
-<to-do>
-  
-# calculando e analisando  rankings combsum
-<to-do>
-  
-# calculando e analisando  rankings borda
-<to-do>
+# calculando e analisando rankings combsum
+r_combsum_q4 <- names(imagens)[combsum(dist_hist_q4, dist_text_q4, dist_forma_q4)]
+r_combsum_q4
+
+# calculando e analisando rankings borda
+r_borda_q4 <- names(imagens)[borda(r_hist_q4, r_text_q4, r_forma_q4)]
+r_borda_q4
 
   
-analyse_rankings(<to-do>)
-analyse_rankings(<to-do>)
+# analisar resultados
+analyse_rankings(r_combmin_q4)
+analyse_rankings(r_combmax_q4)
+analyse_rankings(r_combsum_q4)
+analyse_rankings(r_borda_q4)
   
 #----------------------------------------------------------------#
 # Questao 4 - RESPONDA:                   
