@@ -286,7 +286,25 @@ MAP_shape <- map(shape_map_list, 10) ## 0.391
 #                                         
 ######################################
 #
+rankings_c <- lapply(names(imagens), function(img){get_ranking_by_distance(features_c, img)})
+rankings_t <- lapply(names(imagens), function(img){get_ranking_by_distance(features_t, img)})
+rankings_s <- lapply(names(imagens), function(img){get_ranking_by_distance(features_s, img)})
+image_class_map <- data.frame(img = names(imagens), class =nome_classes[1,])
+g_truth_list_build <- function(img_name, cls) { 
+  rk <- get_ranking_by_distance(features_c, img_name);
+  gtruth <- get_ground_truth(path_plantas, nome_classes, cls);
+  
+  return(list(gtruth, rk))
+}
+c_list_df_11points <- list(mapply(g_truth_list_build, image_class_map$img, image_class_map$class, USE.NAMES = FALSE))
 
+t <- list(
+  list(ground_truth_biloba, ranking_c_biloba), 
+  list(ground_truth_europaea, ranking_c_europaea),
+  list(ground_truth_ilex, ranking_c_ilex),
+  list(ground_truth_monogyna, ranking_c_monogyna),
+  list(ground_truth_regia, ranking_c_regia)
+)
 
 df_c_11_points <- generate_df_11_points(
   list(
